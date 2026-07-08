@@ -1,3 +1,4 @@
 flask
 cs50
 Flask-Login
+gunicorn==23.0.0
