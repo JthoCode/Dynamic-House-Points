@@ -266,3 +266,9 @@ def password():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+if __name__ == "__main__":
+    # Render passes the port via the PORT environment variable
+    port = int(os.environ.get("PORT", 5000))
+    # host="0.0.0.0" makes the server accessible externally
+    app.run(host="0.0.0.0", port=port)
