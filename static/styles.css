@@ -1,0 +1,722 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #ececec;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* =========================
+   ADMIN FORM
+========================= */
+
+form {
+  max-width: 600px;
+  margin: 0 auto 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group input:last-of-type {
+  margin-bottom: 0;
+}
+
+button {
+  display: block;
+  width: 200px;
+  margin: 30px auto 0;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+}
+
+/* =========================
+   TITLE
+========================= */
+
+h1 {
+  text-align: center;
+  font-size: 4.5rem;
+  font-weight: bold;
+  color: #333;
+
+  margin-top: 25px;
+  margin-bottom: 40px;
+}
+
+/* =========================
+   ADMIN LINK
+========================= */
+
+p {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.graph-layout {
+  width: 95%;
+  max-width: 1700px;
+
+  margin: auto;
+
+  display: flex;
+}
+
+.y-axis {
+  width: 90px;
+  height: 650px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  font-size: 1.2rem;
+  font-weight: bold;
+
+  color: #444;
+}
+
+/* =========================
+   GRAPH
+========================= */
+
+.graph {
+  flex: 1;
+
+  height: 650px;
+
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  border-bottom: 3px solid #222;
+}
+
+/* =========================
+   GRIDLINES
+========================= */
+
+.grid-line {
+  position: absolute;
+
+  left: 0;
+  width: 100%;
+
+  border-top: 1px solid #c5c5c5;
+}
+
+.grid-25 {
+  top: 25%;
+}
+.grid-50 {
+  top: 50%;
+}
+.grid-75 {
+  top: 75%;
+}
+
+/* =========================
+   FLOOR
+========================= */
+
+.graph-floor {
+  position: absolute;
+
+  bottom: -25px;
+  left: 0;
+
+  width: 100%;
+  height: 25px;
+
+  background: #dddddd;
+
+  transform: skewX(-45deg);
+
+  z-index: 0;
+}
+
+/* =========================
+   BAR WRAPPER
+========================= */
+
+.bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+
+  flex: 1;
+  height: 100%;
+
+  z-index: 5;
+}
+
+/* =========================
+   BAR
+========================= */
+
+.bar {
+  width: 120px; /* THINNER */
+
+  position: relative;
+
+  transform-origin: bottom center;
+
+  animation: growUp 1s ease-out;
+
+  transition:
+    transform 0.25s ease,
+    filter 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* =========================
+   HOVER
+========================= */
+
+.bar:hover {
+  transform: translateY(-12px);
+
+  filter: brightness(1.05);
+
+  cursor: pointer;
+}
+
+/* =========================
+   TOP FACE
+========================= */
+
+.bar::before {
+  content: "";
+
+  position: absolute;
+
+  top: -16px;
+  left: 7px;
+
+  width: 81px;
+  height: 16px;
+
+  transform: skewX(-45deg);
+
+  z-index: 3;
+}
+
+/* =========================
+   DESKTOP BAR TOPS
+========================= */
+
+@media (min-width: 1201px) {
+  .bar::before {
+    width: 121.25px;
+  }
+}
+
+/* =========================
+   SIDE FACE
+========================= */
+
+.bar::after {
+  content: "";
+
+  position: absolute;
+
+  top: -8px;
+  right: -16px;
+
+  width: 16px;
+  height: 100%;
+
+  transform: skewY(-45deg);
+
+  z-index: 2;
+}
+
+/* =========================
+   VALUE
+========================= */
+
+.value {
+  position: absolute;
+
+  top: 15px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: white;
+
+  font-size: 1.8rem;
+  font-weight: bold;
+
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.35);
+
+  animation: fadeIn 1.2s ease;
+}
+
+/* =========================
+   LABELS
+========================= */
+
+.label {
+  margin-top: 20px;
+
+  font-size: 1.5rem;
+  font-weight: bold;
+
+  color: #333;
+}
+
+/* =========================
+   DEVOTUS
+========================= */
+
+.devotus {
+  background: #5f9c51;
+}
+
+.devotus::before {
+  background: #80c172;
+}
+
+.devotus::after {
+  background: #3e6f34;
+}
+
+/* =========================
+   RESPECTUS
+========================= */
+
+.respectus {
+  background: #6654a7;
+}
+
+.respectus::before {
+  background: #8a78c9;
+}
+
+.respectus::after {
+  background: #49397d;
+}
+
+/* =========================
+   AMARE
+========================= */
+
+.amare {
+  background: #d7170d;
+}
+
+.amare::before {
+  background: #f04d43;
+}
+
+.amare::after {
+  background: #9f1008;
+}
+
+/* =========================
+   NOBILIS
+========================= */
+
+.nobilis {
+  background: #878787;
+}
+
+.nobilis::before {
+  background: #a8a8a8;
+}
+
+.nobilis::after {
+  background: #616161;
+}
+
+/* =========================
+   ANIMO
+========================= */
+
+.animo {
+  background: #416ebe;
+}
+
+.animo::before {
+  background: #6894dd;
+}
+
+.animo::after {
+  background: #2c4f8d;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes growUp {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================
+   ADMIN FORM STYLES
+========================= */
+
+form {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #2c2c2c;
+  font-size: 1.1rem;
+}
+
+.form-group input[type="number"],
+.form-group input[type="text"] {
+  width: 200px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.form-group input[type="number"]:focus,
+.form-group input[type="text"]:focus {
+  outline: none;
+  border-color: #416ebe;
+  box-shadow: 0 0 5px rgba(65, 110, 190, 0.3);
+}
+
+.form-group .event {
+  margin-top: 8px;
+  font-size: 0.9rem;
+}
+
+#password-submit {
+  display: block;
+  margin: 30px auto 0;
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 1200px) {
+  .bar {
+    width: 80px;
+  }
+
+  .value {
+    font-size: 1rem;
+  }
+
+  .label {
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+}
+
+/* =========================
+   ADMIN LINK
+========================= */
+
+.admin-link {
+  text-align: center;
+  margin-top: -15px;
+  margin-bottom: 35px;
+}
+
+.admin-link a {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.admin-link a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+}
+
+#modalTitle {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 2rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.event-item {
+  padding: 15px;
+  background: #f5f5f5;
+  border-left: 4px solid #416ebe;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.event-item.devotus {
+  border-left-color: #5f9c51;
+}
+
+.event-item.respectus {
+  border-left-color: #6654a7;
+}
+
+.event-item.amare {
+  border-left-color: #d7170d;
+}
+
+.event-item.nobilis {
+  border-left-color: #878787;
+}
+
+.event-item.animo {
+  border-left-color: #416ebe;
+}
+
+.event-item:hover {
+  background: #efefef;
+}
+
+.event-name {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.event-details {
+  display: flex;
+  gap: 20px;
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.points,
+.placing {
+  display: flex;
+  align-items: center;
+}
+
+/* =========================
+   WATERMARK
+========================= */
+.watermark {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+
+  background-color: #63666a;
+  color: white;
+
+  padding: 6px 14px;
+  border-radius: 6px;
+
+  font-size: 12px;
+  z-index: 9999;
+
+  pointer-events: none;
+}
+
+/* =========================
+   GRAPH COLORS
+========================= */
+
+.bar.devotus {
+  background: #5f9c51;
+}
+
+.bar.respectus {
+  background: #6654a7;
+}
+
+.bar.amare {
+  background: #d7170d;
+}
+
+.bar.nobilis {
+  background: #878787;
+}
+
+.bar.animo {
+  background: #416ebe;
+}
+
+/* =========================
+   MOBILE SCORECARDS (BASE)
+========================= */
+
+.score-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 16px;
+  border-radius: 12px;
+
+  color: white !important;
+  font-weight: 600;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   MOBILE LAYOUT SWITCH
+========================= */
+
+.mobile-scoreboard {
+  display: none;
+}
+
+/* =========================
+   MOBILE VIEW
+========================= */
+
+@media (max-width: 768px) {
+  .graph-layout {
+    display: none;
+  }
+
+  .mobile-scoreboard {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 10px;
+  }
+}

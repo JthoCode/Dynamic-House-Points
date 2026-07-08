@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>House Points</title>
+
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    {% set max_points = [ devotus, respectus, amare, nobilis, animo ] | max %}
+    {% set graph_max = ((max_points // 1000) + 1) * 1000 %} {% set
+    devotus_height = (devotus / graph_max) * 550 %} {% set respectus_height =
+    (respectus / graph_max) * 550 %} {% set amare_height = (amare / graph_max) *
+    550 %} {% set nobilis_height = (nobilis / graph_max) * 550 %} {% set
+    animo_height = (animo / graph_max) * 550 %}
+
+    <h1>House Points</h1>
+
+    <p class="admin-link">
+      <a href="/password">Admin Panel</a>
+    </p>
+
+    {% if locked and not is_admin %}
+    <div class="locked-message">
+      <p>The scores are locked in.</p>
+    </div>
+    {% else %}
+    <div class="graph-layout">
+      <div class="y-axis">
+        <div>{{ graph_max }}</div>
+        <div>{{ (graph_max * 0.75)|int }}</div>
+        <div>{{ (graph_max * 0.5)|int }}</div>
+        <div>{{ (graph_max * 0.25)|int }}</div>
+        <div>0</div>
+      </div>
+
+      <div class="graph">
+        <div class="grid-line grid-25"></div>
+        <div class="grid-line grid-50"></div>
+        <div class="grid-line grid-75"></div>
+        <div class="bar-wrapper">
+          <div
+            class="bar devotus"
+            data-height="{{ (devotus / graph_max) * 550 }}"
+            data-house="devotus"
+          >
+            <div class="value">{{ devotus }}</div>
+          </div>
+          <div class="label">Devotus</div>
+        </div>
+
+        <div class="bar-wrapper">
+          <div
+            class="bar respectus"
+            data-height="{{ (respectus / graph_max) * 550 }}"
+            data-house="respectus"
+          >
+            <div class="value">{{ respectus }}</div>
+          </div>
+          <div class="label">Respectus</div>
+        </div>
+
+        <div class="bar-wrapper">
+          <div
+            class="bar amare"
+            data-height="{{ (amare / graph_max) * 550 }}"
+            data-house="amare"
+          >
+            <div class="value">{{ amare }}</div>
+          </div>
+          <div class="label">Amare</div>
+        </div>
+
+        <div class="bar-wrapper">
+          <div
+            class="bar nobilis"
+            data-height="{{ (nobilis / graph_max) * 550 }}"
+            data-house="nobilis"
+          >
+            <div class="value">{{ nobilis }}</div>
+          </div>
+          <div class="label">Nobilis</div>
+        </div>
+
+        <div class="bar-wrapper">
+          <div
+            class="bar animo"
+            data-height="{{ (animo / graph_max) * 550 }}"
+            data-house="animo"
+          >
+            <div class="value">{{ animo }}</div>
+          </div>
+          <div class="label">Animo</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="mobile-scoreboard">
+      <div
+        class="score-card devotus"
+        style="background: #5f9c51"
+        data-house="devotus"
+      >
+        <span>Devotus</span>
+        <span>{{ devotus }}</span>
+      </div>
+
+      <div
+        class="score-card respectus"
+        style="background: #6654a7"
+        data-house="respectus"
+      >
+        <span>Respectus</span>
+        <span>{{ respectus }}</span>
+      </div>
+
+      <div
+        class="score-card amare"
+        style="background: #d7170d"
+        data-house="amare"
+      >
+        <span>Amare</span>
+        <span>{{ amare }}</span>
+      </div>
+
+      <div
+        class="score-card nobilis"
+        style="background: #878787"
+        data-house="nobilis"
+      >
+        <span>Nobilis</span>
+        <span>{{ nobilis }}</span>
+      </div>
+
+      <div
+        class="score-card animo"
+        style="background: #416ebe"
+        data-house="animo"
+      >
+        <span>Animo</span>
+        <span>{{ animo }}</span>
+      </div>
+    </div>
+
+    <!-- Modal for event history -->
+    <div id="historyModal" class="modal hidden">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalTitle">House Events</h2>
+        <div id="historyList" class="history-list">
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const modal = document.getElementById("historyModal");
+      const closeBtn = document.querySelector(".close");
+
+      /* =========================
+   OPEN HISTORY MODAL
+========================= */
+      function openHistory(house) {
+        const capitalizedHouse = house.charAt(0).toUpperCase() + house.slice(1);
+
+        document.getElementById("modalTitle").textContent =
+          capitalizedHouse + " Events";
+
+        fetch(`/history/${house}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const historyList = document.getElementById("historyList");
+
+            if (data.events && data.events.length > 0) {
+              historyList.innerHTML = data.events
+                .map(
+                  (event) => `
+              <div class="event-item ${house}">
+                <div class="event-name">
+                  ${event.event || "No event name"}
+                </div>
+                <div class="event-details">
+                  <span class="points">Points: ${event.points}</span>
+                  <span class="placing">Place: ${event.placing || "N/A"}</span>
+                </div>
+              </div>
+            `,
+                )
+                .join("");
+            } else {
+              historyList.innerHTML = "<p>No events recorded yet.</p>";
+            }
+
+            modal.classList.remove("hidden");
+          })
+          .catch((error) => {
+            console.error("Error fetching history:", error);
+            document.getElementById("historyList").innerHTML =
+              "<p>Error loading events.</p>";
+            modal.classList.remove("hidden");
+          });
+      }
+
+      /* =========================
+   CLICK HANDLERS (BARS + CARDS)
+========================= */
+      document.querySelectorAll(".bar, .score-card").forEach((el) => {
+        el.style.cursor = "pointer";
+
+        el.addEventListener("click", function () {
+          const house = el.getAttribute("data-house") || el.classList[1]; // devotus, respectus, etc.
+
+          openHistory(house);
+        });
+      });
+
+      /* =========================
+   MODAL CLOSE
+========================= */
+      closeBtn.onclick = function () {
+        modal.classList.add("hidden");
+      };
+
+      window.onclick = function (event) {
+        if (event.target === modal) {
+          modal.classList.add("hidden");
+        }
+      };
+
+      /* =========================
+   GRAPH BAR HEIGHTS
+========================= */
+      document.querySelectorAll(".bar").forEach(function (bar) {
+        const height = bar.getAttribute("data-height");
+        if (height !== null) {
+          bar.style.height = height + "px";
+        }
+      });
+    </script>
+    <div class="watermark">Made by Coding Club</div>
+  </body>
+</html>

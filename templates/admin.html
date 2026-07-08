@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Admin Panel</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <style>
+      .button-container {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 12px;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      @media (min-width: 769px) {
+        .button-container {
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>House Overlord's Home</h1>
+    <!--If you see this, 1. stop trying to access the admin panel and hack my website, 2. I congratulate you for being an amazing hacker. Good job 👍-->
+
+    <form method="post" action="/admin" autocomplete="off">
+      <div class="form-group">
+        <label for="devotus"
+          >Devotus <small class="current">Current: {{ devotus }}</small></label
+        >
+        <input
+          type="number"
+          autocomplete="off"
+          class="form-control"
+          id="devotus"
+          name="devotus"
+          placeholder="Enter points"
+        />
+        <input
+          type="text"
+          autocomplete="off"
+          class="event"
+          name="devotus_event"
+          placeholder="Event Name"
+        />
+        <input
+          type="number"
+          autocomplete="off"
+          class="placing"
+          name="devotus_placing"
+          placeholder="Placing"
+        />
+      </div>
+      <div class="form-group">
+        <label for="respectus"
+          >Respectus
+          <small class="current">Current: {{ respectus }}</small></label
+        >
+        <input
+          type="number"
+          autocomplete="off"
+          class="form-control"
+          id="respectus"
+          name="respectus"
+          placeholder="Enter points"
+        />
+        <input
+          type="text"
+          autocomplete="off"
+          class="event"
+          name="respectus_event"
+          placeholder="Event Name"
+        />
+        <input
+          type="number"
+          autofill="off"
+          class="placing"
+          name="respectus_placing"
+          placeholder="Placing"
+        />
+      </div>
+      <div class="form-group">
+        <label for="amare"
+          >Amare <small class="current">Current: {{ amare }}</small></label
+        >
+        <input
+          type="number"
+          autocomplete="off"
+          class="form-control"
+          id="amare"
+          name="amare"
+          placeholder="Enter points"
+        />
+        <input
+          type="text"
+          autofill="off"
+          class="event"
+          name="amare_event"
+          placeholder="Event Name"
+        />
+        <input
+          type="number"
+          autofill="off"
+          class="placing"
+          name="amare_placing"
+          placeholder="Placing"
+        />
+      </div>
+      <div class="form-group">
+        <label for="nobilis"
+          >Nobilis <small class="current">Current: {{ nobilis }}</small></label
+        >
+        <input
+          type="number"
+          autocomplete="off"
+          class="form-control"
+          id="nobilis"
+          name="nobilis"
+          placeholder="Enter points"
+        />
+        <input
+          type="text"
+          autofill="off"
+          class="event"
+          name="nobilis_event"
+          placeholder="Event Name"
+        />
+        <input
+          type="number"
+          autofill="off"
+          class="placing"
+          name="nobilis_placing"
+          placeholder="Placing"
+        />
+      </div>
+      <div class="form-group">
+        <label for="animo"
+          >Animo <small class="current">Current: {{ animo }}</small></label
+        >
+        <input
+          type="number"
+          autocomplete="off"
+          class="form-control"
+          id="animo"
+          name="animo"
+          placeholder="Enter points"
+        />
+        <input
+          type="text"
+          autofill="off"
+          class="event"
+          name="animo_event"
+          placeholder="Event Name"
+        />
+        <input
+          type="number"
+          autofill="off"
+          class="placing"
+          name="animo_placing"
+          placeholder="Placing"
+        />
+      </div>
+      <div class="button-container">
+        <button type="submit" class="btn btn-primary">Update Points</button>
+        <button type="button" id="undoBtn" class="btn btn-secondary">
+          Undo Last Entry
+        </button>
+        <button
+          type="button"
+          href="/reset"
+          id="resetPassword"
+          class="btn btn-info"
+        >
+          Reset Password
+        </button>
+        <button type="button" id="lockBtn" class="btn btn-warning">
+          Lock In Scores
+        </button>
+        <button type="button" id="resetBtn" class="btn btn-danger">
+          Reset Database
+        </button>
+      </div>
+    </form>
+
+    <script>
+      // FIXED: Prevents mouse scrolling from changing numeric values when active
+      document.addEventListener(
+        "wheel",
+        function (event) {
+          if (document.activeElement.type === "number") {
+            event.preventDefault();
+          }
+        },
+        { passive: false },
+      );
+
+      document
+        .getElementById("resetBtn")
+        .addEventListener("click", function () {
+          if (
+            !confirm(
+              "Are you sure you want to reset the database? This will delete all history and reset current points (It also stops the locked screen).",
+            )
+          )
+            return;
+          fetch("/admin/reset", { method: "POST" })
+            .then((r) => r.json())
+            .then((res) => {
+              if (res.success) window.location.href = "/";
+              else alert("Reset failed");
+            })
+            .catch(() => alert("Reset failed"));
+        });
+
+      document.getElementById("undoBtn").addEventListener("click", function () {
+        if (!confirm("Undo the last entry?")) return;
+        fetch("/admin/undo", { method: "POST" })
+          .then((r) => r.json())
+          .then((res) => {
+            if (res.success) location.reload();
+            else alert("Undo failed: " + (res.error || "Unknown error"));
+          })
+          .catch(() => alert("Undo failed"));
+      });
+
+      document.getElementById("lockBtn").addEventListener("click", function () {
+        if (
+          !confirm(
+            "Lock scores? The homepage will no longer display current scores.",
+          )
+        )
+          return;
+        fetch("/admin/lock", { method: "POST" })
+          .then((r) => r.json())
+          .then((res) => {
+            if (res.success) window.location.href = "/";
+            else alert("Lock failed");
+          })
+          .catch(() => alert("Lock failed"));
+      });
+
+      document.getElementById("resetPassword").addEventListener("click", () => {
+        window.location.href = "/reset-password";
+      });
+    </script>
+  </body>
+</html>
